@@ -21,6 +21,7 @@ public class ActrMergeSort {
 		master.tell(m -> m.start(input));
 		
 		Thread.sleep(60000);
+		
 	}
 	
 	interface IResultReceiver {
