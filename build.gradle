@@ -1,0 +1,14 @@
+plugins {
+    id "java"
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.github.zakgof:actr:0.0.2'
+    implementation 'com.typesafe.akka:akka-actor_2.12:2.5.21'
+}
