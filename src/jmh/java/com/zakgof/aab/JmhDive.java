@@ -1,29 +1,29 @@
 package com.zakgof.aab;
 
 import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
 @State(Scope.Benchmark)
-public class JmhRing {
+public class JmhDive {
 
-	@Param({ "5", "10", "20" })
-	public int size;
+	public final int ACTORCOUNT = 100000;
 	
-	public int rounds = 1000000;
-
 	@Param({ "akka", "actr" })
 	public String what;
 
 	@Benchmark
+	@BenchmarkMode(Mode.AverageTime)
 	public void run() throws InterruptedException {
 		switch (what) {
 			case "akka": 
-				AkkaRing.run(size, rounds);
+				AkkaDive.run(ACTORCOUNT);
 				break;
 			case "actr": 
-				ActrRing.run(size, rounds);
+				ActrDive.run(ACTORCOUNT);
 				break;
 		}
 	}

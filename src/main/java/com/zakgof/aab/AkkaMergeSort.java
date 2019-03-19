@@ -10,18 +10,25 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 
 public class AkkaMergeSort {
-
+	
 	public static void main(String[] args) throws InterruptedException {
+		Random random = new Random(0L);
+		int[] input = IntStream.range(0, 1 << 18).map(i -> random.nextInt()).toArray();
+		System.err.println("AKKA merge sort started...");
+		long start = System.currentTimeMillis();
+		sort(input);
+		long end = System.currentTimeMillis();
+		System.err.println("finished in " + (end - start));
+	}
+	
+	public static void sort(int[] input) {
 
 		final ActorSystem system = ActorSystem.create("akkasort");
-		
-		Random random = new Random(0L);
-		int[] input = IntStream.range(0, 1 << 20).map(i -> random.nextInt()).toArray();
 		
 		final ActorRef master = system.actorOf(MasterActor.props(), "master");
 		master.tell(input, ActorRef.noSender());
 		
-		Thread.sleep(60000);
+		system.getWhenTerminated().toCompletableFuture().join();
 	}
 	
 	private static class ResultMessage {
@@ -41,8 +48,6 @@ public class AkkaMergeSort {
 			return Props.create(MasterActor.class, () -> new MasterActor());
 		}
 
-		private long start;
-
 		@Override
 		public Receive createReceive() {
 			return receiveBuilder()
@@ -52,16 +57,12 @@ public class AkkaMergeSort {
 		}
 
 		private void start(int[] array) {
-			System.err.println("Started !!! ");
-			start = System.currentTimeMillis();
 			ActorRef sorter = context().actorOf(Sorter.props(-1), "c");
 			sorter.tell(array, self());
 		}
 		
 		private void finish(ResultMessage result) {
-			long end = System.currentTimeMillis();
-			System.err.println("AKKA Finished !!! " + (end - start)); // + "   " + Arrays.toString(result.getArray()));
-			System.exit(0);
+			context().system().terminate();
 		}
 	}
 

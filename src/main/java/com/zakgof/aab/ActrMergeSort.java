@@ -11,16 +11,22 @@ import com.zakgof.actr.Actr;
 public class ActrMergeSort {
 
 	public static void main(String[] args) throws InterruptedException {
+		Random random = new Random(0L);
+		int[] input = IntStream.range(0, 1 << 18).map(i -> random.nextInt()).toArray();
+		System.err.println("AKKA merge sort started...");
+		long start = System.currentTimeMillis();
+		sort(input);
+		long end = System.currentTimeMillis();
+		System.err.println("finished in " + (end - start));
+	}
+	
+	public static void sort(int[] input) {
 
 		final ActorSystem system = ActorSystem.create("actrsort");
 		
-		Random random = new Random(0L);
-		int[] input = IntStream.range(0, 1 << 20).map(i -> random.nextInt()).toArray();
-		
 		final ActorRef<MasterActor> master = system.actorOf(MasterActor::new, "master");
 		master.tell(m -> m.start(input));
-		
-		Thread.sleep(60000);
+		system.shutdownCompletable().join();
 		
 	}
 	
@@ -30,19 +36,13 @@ public class ActrMergeSort {
 
 	private static class MasterActor implements IResultReceiver {
 
-		private long start;
-
 		public void start(int[] array) {
-			System.err.println("Started !!! ");
-			start = System.currentTimeMillis();
 			ActorRef<Sorter> sorter = Actr.system().actorOf(() -> new Sorter(-1), "c");
 			sorter.tell(s -> s.run(array));
 		}
 
 		public void result(int[] array, int side) {
-			long end = System.currentTimeMillis();
-			System.err.println("ACTR Finished !!! " + (end - start));
-			System.exit(0);
+			Actr.system().shutdown();
 		}
 	}
 
