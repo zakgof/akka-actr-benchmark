@@ -19,6 +19,9 @@ Then actor waits until both children reply with sorted arrays, merges them into 
 ## results
 ```
 Benchmark         (what)  Mode  Cnt   Score   Error  Units
-JmhMergeSort.run    akka  avgt   25  10.495 Â± 0.455   s/op
-JmhMergeSort.run    actr  avgt   25   8.897 Â± 1.949   s/op
+JmhDive.run         akka  avgt   25  22.839 ± 0.551   s/op
+JmhDive.run         actr  avgt   25   4.039 ± 0.081   s/op
+JmhMergeSort.run    akka  avgt   25  33.365 ± 0.846   s/op
+JmhMergeSort.run    actr  avgt   25   3.317 ± 0.078   s/op
+
 ```

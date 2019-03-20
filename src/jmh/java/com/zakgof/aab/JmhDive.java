@@ -10,7 +10,7 @@ import org.openjdk.jmh.annotations.State;
 @State(Scope.Benchmark)
 public class JmhDive {
 
-	public final int ACTORCOUNT = 100000;
+	public final int ACTORCOUNT = 1000000;
 	
 	@Param({ "akka", "actr" })
 	public String what;

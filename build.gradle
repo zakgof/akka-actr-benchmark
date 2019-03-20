@@ -10,17 +10,8 @@ repositories {
 }
 
 dependencies {
-    // implementation 'com.github.zakgof:actr:0.0.4'
+    implementation 'com.github.zakgof:actr:0.0.5'
     implementation 'com.typesafe.akka:akka-actor_2.12:2.5.21'
     implementation 'org.openjdk.jmh:jmh-core:1.21'
     implementation 'org.openjdk.jmh:jmh-generator-annprocess:1.21'
 }
-
-sourceSets {
-    main {
-        java {
-            srcDirs 'src/main/java'
-            srcDirs '../actr/src/main/java'
-        }
-    }
- }

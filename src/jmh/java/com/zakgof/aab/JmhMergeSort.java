@@ -13,7 +13,7 @@ import org.openjdk.jmh.annotations.State;
 @State(Scope.Benchmark)
 public class JmhMergeSort {
 
-	public final int DATASIZE = 1 << 18;
+	public final int DATASIZE = 1 << 20;
 	
 	private Random random = new Random(0L);
 	private int[] input = IntStream.range(0, DATASIZE).map(i -> random.nextInt()).toArray();
