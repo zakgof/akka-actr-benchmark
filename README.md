@@ -17,7 +17,7 @@ A runner actor divides an array in two parts, then creates two new actors and se
 Then actor waits until both children reply with sorted arrays, merges them into a single sorted array and sends back to the parent actor.
 
 ```
-      Top-down (fork)                             |
+      Top-down step(fork)                         |
                                       [8, 5, 3, 2, 4, 6, 1, 7]
                                                   |
                                                   V
@@ -42,7 +42,7 @@ Then actor waits until both children reply with sorted arrays, merges them into 
                       
                       
                               
-  Bottom-up (join)                    [8, 5, 3, 2, 4, 6, 1, 7]
+  Bottom-up step (join)               [1, 2, 3, 4, 5, 6, 7, 8]
                                                   ^
                                                   |
                                                Master
