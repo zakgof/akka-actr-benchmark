@@ -1,5 +1,5 @@
 # akka-actr-benchmark
-Benchmark akka and actr actor model implementations in Java
+Benchmark [akka](https://github.com/akka/akka) and [actr](https://github.com/zakgof/actr) actor model implementations in Java
 
 ## benchmark 1: sequential run
 
@@ -26,7 +26,7 @@ Master actor sends 100k messages to each of 100 Runner actors. Each runner repli
              . . . 
 ```
 
-## benchmark 3: parallel merge sort implementation using actor model
+## benchmark 3: parallel merge sort
 
 A runner actor divides an array in two parts, then creates two new actors and sends them the halves.
 Then actor waits until both children reply with sorted arrays, merges them into a single sorted array and sends back to the parent actor.
@@ -100,5 +100,8 @@ Parallel run            actr    avgt   25    4.904 ± 0.532   s/op
 Merge sort              akka    avgt   25   34.064 ± 1.492   s/op
 Merge sort              actr    avgt   25    7.921 ± 0.082   s/op
 
-
+Smaller numbers are better.
 ```
+## conclusion
+
+Actr outperforms Akka in all three benchmarks on default settings. The difference is especially significant in benchmarks involving creating actors.
