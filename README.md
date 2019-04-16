@@ -1,7 +1,7 @@
 # akka-actr-benchmark
 Benchmark akka and actr actor model implementations in Java
 
-## benchmark 1: actors row
+## benchmark 1: sequential run
 
 Each actor creates a new actor and sends it an incremented integer until 1 million actors are created.
 Then a Finish message traverses the path back to the start
@@ -11,10 +11,26 @@ Then a Finish message traverses the path back to the start
         <---Finish------        <---Finish---        <---Finish---       <---Finish----
 ```
 
-## benchmark 2: parallel merge sort implementation using actor model
+
+## benchmark 2: parallel run
+
+Master actor sends 100k messages to each of 100 Runner actors. Each runner replies back to Master; once Master collects all the replies, the benchmark terminates.
+
+```
+             ------>   Runner
+             <------
+    Master   ------>   Runner
+             <------
+             ------>   Runner
+             <------
+             . . . 
+```
+
+## benchmark 3: parallel merge sort implementation using actor model
 
 A runner actor divides an array in two parts, then creates two new actors and sends them the halves.
 Then actor waits until both children reply with sorted arrays, merges them into a single sorted array and sends back to the parent actor.
+The test array had 2^20 random integers.
 
 ```
       Top-down step(fork)                         |
@@ -68,20 +84,21 @@ Then actor waits until both children reply with sorted arrays, merges them into 
 
 ## frameworks compared:
 
-- akka https://github.com/akka/akka
-- actr https://github.com/zakgof/actr
+- akka 2.5.21 https://github.com/akka/akka
+- actr 0.2.0 https://github.com/zakgof/actr
 
 ## results
 ```
 Intel Core i5-6500
 OpenJDK 12+33
-akka 2.5.21
-actr 0.0.5
 
-Benchmark         (what)  Mode  Cnt   Score   Error  Units
-JmhDive.run         akka  avgt   25  22.839 ± 0.551   s/op
-JmhDive.run         actr  avgt   25   4.039 ± 0.081   s/op
-JmhMergeSort.run    akka  avgt   25  33.365 ± 0.846   s/op
-JmhMergeSort.run    actr  avgt   25   3.317 ± 0.078   s/op
+Benchmark            Framework  Mode  Cnt   Score    Error   Units
+Sequential run          akka    avgt   25   23.333 ± 0.656   s/op
+Sequential run          actr    avgt   25    5.883 ± 0.151   s/op
+Parallel run            akka    avgt   25    6.555 ± 0.422   s/op
+Parallel run            actr    avgt   25    4.904 ± 0.532   s/op
+Merge sort              akka    avgt   25   34.064 ± 1.492   s/op
+Merge sort              actr    avgt   25    7.921 ± 0.082   s/op
+
 
 ```
