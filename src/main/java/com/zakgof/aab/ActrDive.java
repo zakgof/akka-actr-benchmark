@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import com.zakgof.actr.ActorRef;
 import com.zakgof.actr.ActorSystem;
 import com.zakgof.actr.Actr;
+import com.zakgof.actr.DedicatedThreadScheduler;
 import com.zakgof.actr.FiberScheduler;
 import com.zakgof.actr.ForkJoinPoolScheduler;
 import com.zakgof.actr.IActorScheduler;
@@ -23,6 +24,13 @@ public class ActrDive {
 			System.err.println("ACTR Dive started on ForkJoinPool...");
 			long start = System.currentTimeMillis();
 			run(() -> new ForkJoinPoolScheduler(10), 100000);
+			long end = System.currentTimeMillis();
+			System.err.println("finished in " + (end - start));
+		}
+		{
+			System.err.println("ACTR Dive started on Dedicated Threads...");
+			long start = System.currentTimeMillis();
+			run(() -> new DedicatedThreadScheduler(), 100000);
 			long end = System.currentTimeMillis();
 			System.err.println("finished in " + (end - start));
 		}

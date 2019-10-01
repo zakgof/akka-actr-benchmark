@@ -6,15 +6,23 @@ import java.util.function.Supplier;
 import com.zakgof.actr.ActorRef;
 import com.zakgof.actr.ActorSystem;
 import com.zakgof.actr.Actr;
+import com.zakgof.actr.DedicatedThreadScheduler;
 import com.zakgof.actr.FiberScheduler;
+import com.zakgof.actr.ForkJoinPoolScheduler;
 import com.zakgof.actr.IActorScheduler;
 
 public class ActrMassiveTellToActorGroup {
 
 	public static void main(String[] args) throws InterruptedException {
-		System.err.println("ACTR Massive Tell started...");
+		go(() -> new FiberScheduler(), "Fibers");
+		go(() -> new ForkJoinPoolScheduler(10), "ForkJoinPool");
+		go(() -> new DedicatedThreadScheduler(), "Threads");
+	}
+
+	private static void go(Supplier<IActorScheduler> factory, String name) throws InterruptedException {
+		System.err.println("ACTR Massive Tell started on " + name);
 		long start = System.currentTimeMillis();
-		run(() -> new FiberScheduler(), 100000, 100);
+		run(factory, 100000, 100);
 		long end = System.currentTimeMillis();
 		System.err.println("finished in " + (end - start));
 	}

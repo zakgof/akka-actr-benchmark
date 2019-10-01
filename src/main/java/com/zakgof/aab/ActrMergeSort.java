@@ -8,17 +8,25 @@ import java.util.stream.IntStream;
 import com.zakgof.actr.ActorRef;
 import com.zakgof.actr.ActorSystem;
 import com.zakgof.actr.Actr;
+import com.zakgof.actr.DedicatedThreadScheduler;
 import com.zakgof.actr.FiberScheduler;
+import com.zakgof.actr.ForkJoinPoolScheduler;
 import com.zakgof.actr.IActorScheduler;
 
 public class ActrMergeSort {
 
 	public static void main(String[] args) throws InterruptedException {
+		go(() -> new FiberScheduler(), "Fibers");
+		go(() -> new ForkJoinPoolScheduler(10), "ForkJoinPool");
+		go(() -> new DedicatedThreadScheduler(), "Threads");
+	}
+
+	private static void go(Supplier<IActorScheduler> factory, String name) {
 		Random random = new Random(0L);
 		int[] input = IntStream.range(0, 1 << 18).map(i -> random.nextInt()).toArray();
-		System.err.println("ACTR merge sort started...");
+		System.err.println("ACTR merge sort started on " + name);
 		long start = System.currentTimeMillis();
-		sort(() -> new FiberScheduler(), input);
+		sort(factory, input);
 		long end = System.currentTimeMillis();
 		System.err.println("finished in " + (end - start));
 	}
