@@ -1,6 +1,45 @@
 # akka-actr-benchmark
 Benchmark [akka](https://github.com/akka/akka) and [actr](https://github.com/zakgof/actr) actor model implementations in Java
 
+## Introducing Fiber Schedulers
+
+ Oracle released an early access build of JDK with Project Loom featuring delimited continuations, fibers and tail-call elimination: https://jdk.java.net/loom/
+ 
+ Fibers are light-weight user-mode execution threads, implemented by JVM rather than by the underlying OS (in fact, they are implemented on top of Continuations).
+ 
+ "Light-weight" means that creating millions of fiber would be OK for a Java application and fiber creation is much faster than creating a native thread. This makes fibers an excellent base for actor implemenation. This is an attempt to implement a FiberScheduler: every actor here runs in a dedicated fiber.  
+
+The Project Loom Team notes:
+````
+    These builds are not suitable for doing performance testing at this time. There are many significant changes going on that impact the performance and it will likely vary wildly from build to build as the implementation evolves._
+````
+but anyway I'm curious what is the current state of performance in these Early builds, so I'm running this benchmark with default Actr's ForkJoinPool based scheduler vs Loom Fiber based scheduler.
+
+
+## how to run
+
+ - download and unpack an Early Access JDK-14 build with Loom from https://jdk.java.net/loom/
+ 
+ - setup gradle to pick that jdk, in `gradle.properties`:
+
+```` 
+   org.gradle.java.home=c:/оk-14-loom
+````
+
+ - clone the `loom-ea-2019-07-25` branch of both `actr` and `akka-actr-benchmark` into the same parent folder:
+
+````
+   git clone --branch loom-ea-2019-07-25 http://github.com/zakgof/actr
+   git clone --branch loom-ea-2019-07-25 http://github.com/zakgof/akka-actr-benchmark
+````
+
+ - cd to `akka-actr-benchmark` dir and run the benchmark:
+    
+```` 
+   gradlew jmh
+````
+
+
 ## benchmark 1: sequential run
 
 Each actor creates a new actor and sends it an incremented integer until 1 million actors are created.
@@ -93,12 +132,12 @@ Intel Core i5-6500
 OpenJDK 12+33
 
 Benchmark            Framework  Mode  Cnt   Score    Error   Units
-Sequential run          akka    avgt   25   23.333 ± 0.656   s/op
-Sequential run          actr    avgt   25    5.883 ± 0.151   s/op
-Parallel run            akka    avgt   25    6.555 ± 0.422   s/op
-Parallel run            actr    avgt   25    4.904 ± 0.532   s/op
-Merge sort              akka    avgt   25   34.064 ± 1.492   s/op
-Merge sort              actr    avgt   25    7.921 ± 0.082   s/op
+Sequential run          akka    avgt   25   23.333 Â± 0.656   s/op
+Sequential run          actr    avgt   25    5.883 Â± 0.151   s/op
+Parallel run            akka    avgt   25    6.555 Â± 0.422   s/op
+Parallel run            actr    avgt   25    4.904 Â± 0.532   s/op
+Merge sort              akka    avgt   25   34.064 Â± 1.492   s/op
+Merge sort              actr    avgt   25    7.921 Â± 0.082   s/op
 
 Smaller numbers are better.
 ```

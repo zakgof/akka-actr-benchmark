@@ -1,0 +1,2 @@
+include ":actr"
+project(":actr").projectDir = file("../actr")

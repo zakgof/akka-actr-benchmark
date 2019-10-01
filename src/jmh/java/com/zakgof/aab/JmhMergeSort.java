@@ -10,11 +10,14 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
+import com.zakgof.actr.FiberScheduler;
+import com.zakgof.actr.ForkJoinPoolScheduler;
+
 @State(Scope.Benchmark)
 public class JmhMergeSort {
 
 	public final int DATASIZE = 1 << 20;
-	
+
 	private Random random = new Random(0L);
 	private int[] input = IntStream.range(0, DATASIZE).map(i -> random.nextInt()).toArray();
 
@@ -25,12 +28,14 @@ public class JmhMergeSort {
 	@BenchmarkMode(Mode.AverageTime)
 	public void run() throws InterruptedException {
 		switch (what) {
-			case "akka": 
+			case "akka":
 				AkkaMergeSort.sort(input);
 				break;
-			case "actr": 
-				ActrMergeSort.sort(input);
+			case "actr-forkjoin":
+				ActrMergeSort.sort(() -> new ForkJoinPoolScheduler(10), input);
 				break;
+			case "actr-fibers":
+				ActrMergeSort.sort(() -> new FiberScheduler(), input);
 		}
 	}
 }

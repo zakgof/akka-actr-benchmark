@@ -7,11 +7,14 @@ import org.openjdk.jmh.annotations.Param;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
+import com.zakgof.actr.FiberScheduler;
+import com.zakgof.actr.ForkJoinPoolScheduler;
+
 @State(Scope.Benchmark)
 public class JmhDive {
 
 	public final int ACTORCOUNT = 1000000;
-	
+
 	@Param({ "akka", "actr" })
 	public String what;
 
@@ -19,12 +22,14 @@ public class JmhDive {
 	@BenchmarkMode(Mode.AverageTime)
 	public void run() throws InterruptedException {
 		switch (what) {
-			case "akka": 
+			case "akka":
 				AkkaDive.run(ACTORCOUNT);
 				break;
-			case "actr": 
-				ActrDive.run(ACTORCOUNT);
+			case "actr-forkjoin":
+				ActrDive.run(() -> new ForkJoinPoolScheduler(10), ACTORCOUNT);
 				break;
+			case "actr-fibers":
+				ActrDive.run(() -> new FiberScheduler(), ACTORCOUNT);
 		}
 	}
 }
