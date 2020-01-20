@@ -10,34 +10,34 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 
 public class AkkaMergeSort {
-	
+
 	public static void main(String[] args) throws InterruptedException {
 		Random random = new Random(0L);
-		int[] input = IntStream.range(0, 1 << 18).map(i -> random.nextInt()).toArray();
+		int[] input = IntStream.range(0, 1 << 20).map(i -> random.nextInt()).toArray();
 		System.err.println("AKKA merge sort started...");
 		long start = System.currentTimeMillis();
 		sort(input);
 		long end = System.currentTimeMillis();
 		System.err.println("finished in " + (end - start));
 	}
-	
+
 	public static void sort(int[] input) {
 
 		final ActorSystem system = ActorSystem.create("akkasort");
-		
+
 		final ActorRef master = system.actorOf(MasterActor.props(), "master");
 		master.tell(input, ActorRef.noSender());
-		
+
 		system.getWhenTerminated().toCompletableFuture().join();
 	}
-	
+
 	private static class ResultMessage {
-		
+
 		private final int[] array;
 		private final int side;
-		
+
 		ResultMessage(int[] array, int side) {
-			this.array = array; 
+			this.array = array;
 			this.side = side;
 		}
 	}
@@ -51,7 +51,7 @@ public class AkkaMergeSort {
 		@Override
 		public Receive createReceive() {
 			return receiveBuilder()
-			    .match(int[].class, this::start) 
+			    .match(int[].class, this::start)
 				.match(ResultMessage.class, this::finish)
 				.build();
 		}
@@ -60,7 +60,7 @@ public class AkkaMergeSort {
 			ActorRef sorter = context().actorOf(Sorter.props(-1), "c");
 			sorter.tell(array, self());
 		}
-		
+
 		private void finish(ResultMessage result) {
 			context().system().terminate();
 		}
@@ -71,7 +71,7 @@ public class AkkaMergeSort {
 		private final int side;
 		private int[][] res = new int[2][];
 		private ActorRef upstream;
-		
+
 		public Sorter(int side) {
 			this.side = side;
 		}
@@ -95,15 +95,15 @@ public class AkkaMergeSort {
 			else {
 				int[] left  = Arrays.copyOfRange(array, 0, array.length / 2);
 				int[] right = Arrays.copyOfRange(array, array.length / 2, array.length);
-				
+
 				ActorRef a = context().actorOf(Sorter.props(0), "a");
 				ActorRef b = context().actorOf(Sorter.props(1), "b");
-				
+
 				a.tell(left, self());
 				b.tell(right, self());
 			}
 		}
-		
+
 		private void result(ResultMessage result) {
 			res[result.side] = result.array;
 			if (res[0] != null && res[1] != null) {
@@ -119,7 +119,7 @@ public class AkkaMergeSort {
 				answer[--k] = (j < 0 || (i >= 0 && a[i] >= b[j])) ? a[i--] : b[j--];
 			return answer;
 		}
-	
+
 	}
 
 }

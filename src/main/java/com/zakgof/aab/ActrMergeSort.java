@@ -7,27 +7,29 @@ import java.util.stream.IntStream;
 import com.zakgof.actr.ActorRef;
 import com.zakgof.actr.ActorSystem;
 import com.zakgof.actr.Actr;
+import com.zakgof.actr.IActorScheduler;
+import com.zakgof.actr.Schedulers;
 
 public class ActrMergeSort {
 
 	public static void main(String[] args) throws InterruptedException {
 		Random random = new Random(0L);
-		int[] input = IntStream.range(0, 1 << 18).map(i -> random.nextInt()).toArray();
+		int[] input = IntStream.range(0, 1 << 20).map(i -> random.nextInt()).toArray();
 		System.err.println("ACTR merge sort started...");
 		long start = System.currentTimeMillis();
-		sort(input);
+		sort(input, Schedulers.newForkJoinPoolScheduler(10));
+		// sort(input, Schedulers.newSingleThreadScheduler());
+		// sort(input, Schedulers.newFixedThreadPoolScheduler(4, 10));
+		// sort(input, Schedulers.newThreadPerActorScheduler());
 		long end = System.currentTimeMillis();
 		System.err.println("finished in " + (end - start));
 	}
 
-	public static void sort(int[] input) {
-
-		final ActorSystem system = ActorSystem.create("actrsort");
-
+	public static void sort(int[] input, IActorScheduler scheduler) {
+		final ActorSystem system = ActorSystem.create("actrsort", scheduler);
 		final ActorRef<MasterActor> master = system.actorOf(MasterActor::new, "master");
 		master.tell(m -> m.start(input));
 		system.shutdownCompletable().join();
-
 	}
 
 	interface IResultReceiver {

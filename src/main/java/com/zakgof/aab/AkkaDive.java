@@ -10,7 +10,7 @@ public class AkkaDive {
 	public static void main(String[] args) throws InterruptedException {
 		System.err.println("AKKA Dive started...");
 		long start = System.currentTimeMillis();
-		run(100000);
+		run(1000000);
 		long end = System.currentTimeMillis();
 		System.err.println("finished in " + (end - start));
 	}
@@ -41,17 +41,17 @@ public class AkkaDive {
 				.match(FinishMessage.class, msg -> finish())
 				.build();
 		}
-		
+
 		private void start(int limit) {
 			ActorRef next = context().actorOf(Runner.props(limit));
 			next.tell(1, self());
 		}
-		
+
 		private void finish() {
 			context().system().terminate();
 		}
 	}
-	
+
 	private static class Runner extends AbstractActor {
 
 		static public Props props(int limit) {
@@ -59,13 +59,13 @@ public class AkkaDive {
 		}
 
 		private int limit;
-		
+
 		private Runner(int limit) {
 			this.limit = limit;
 		}
 
 		private ActorRef prev;
-		
+
 		@Override
 		public Receive createReceive() {
 			return receiveBuilder()
@@ -73,7 +73,7 @@ public class AkkaDive {
 				.match(FinishMessage.class, msg -> finish())
 				.build();
 		}
-		
+
 		private void run(int i) {
 			this.prev = sender();
 			if (i < limit) {
@@ -83,7 +83,7 @@ public class AkkaDive {
 				prev.tell(new FinishMessage(), self());
 			}
 		}
-		
+
 		private void finish() {
 			prev.tell(new FinishMessage(), self());
 		}
