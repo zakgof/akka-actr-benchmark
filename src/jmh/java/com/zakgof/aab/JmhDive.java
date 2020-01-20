@@ -14,7 +14,7 @@ public class JmhDive {
 
 	public final int ACTORCOUNT = 1000000;
 
-	@Param({ "akka", "actr" /*, "actr-fixd", "actr-sngl", "actr-loom" */ })
+	@Param({ "actr" /*, "actr-fixd", "actr-sngl", "actr-loom" */ })
 	public String what;
 
 	@Benchmark

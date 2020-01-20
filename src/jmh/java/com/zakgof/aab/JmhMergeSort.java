@@ -20,7 +20,7 @@ public class JmhMergeSort {
 	private Random random = new Random(0L);
 	private int[] input = IntStream.range(0, DATASIZE).map(i -> random.nextInt()).toArray();
 
-	@Param({ "akka", "actr" /*, "actr-sngl", "actr-fixd", "actr-loom"*/ })
+	@Param({ "actr" /*, "actr-sngl", "actr-fixd", "actr-loom"*/ })
 	public String what;
 
 	@Benchmark

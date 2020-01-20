@@ -15,7 +15,7 @@ public class JmhMassiveTell {
 	public final int ACTORCOUNT = 100;
 	public final int MESSAGECOUNT = 100000;
 
-	@Param({ "akka", "actr" /* , "actr-sngl", "actr-fixd", "actr-thrd", "actr-loom" */ })
+	@Param({"actr" /* , "actr-sngl", "actr-fixd", "actr-thrd", "actr-loom" */ })
 	public String what;
 
 	@Benchmark

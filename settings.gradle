@@ -1,0 +1,2 @@
+include ':actr'
+project(':actr').projectDir = new File('../actr')
