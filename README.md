@@ -85,23 +85,24 @@ The test array had 2^20 random integers.
 ## frameworks compared:
 
 - akka 2.5.21 https://github.com/akka/akka
-- actr 0.2.0 https://github.com/zakgof/actr
+- actr 0.4.0 https://github.com/zakgof/actr
 
 ## results
 ```
 Intel Core i5-6500
-OpenJDK 12+33
+OpenJDK 12
+Windows 10
 
-Benchmark            Framework  Mode  Cnt   Score    Error   Units
-Sequential run          akka    avgt   25   23.333 ± 0.656   s/op
-Sequential run          actr    avgt   25    5.883 ± 0.151   s/op
-Parallel run            akka    avgt   25    6.555 ± 0.422   s/op
-Parallel run            actr    avgt   25    4.904 ± 0.532   s/op
-Merge sort              akka    avgt   25   34.064 ± 1.492   s/op
-Merge sort              actr    avgt   25    7.921 ± 0.082   s/op
+Benchmark            Framework   Score    Error   Units
+Sequential run          akka    21.500  ± 0.484   s/op
+Sequential run          actr     4.065  ± 0.129   s/op
+Parallel run            akka     6.789  ± 0.622   s/op
+Parallel run            actr     6.587  ± 0.602   s/op
+Merge sort              akka    30.283  ± 1.091   s/op
+Merge sort              actr     4.753  ± 0.139   s/op
 
-Smaller numbers are better.
+(Smaller numbers are better).
 ```
 ## conclusion
 
-Actr outperforms Akka in all three benchmarks on default settings. The difference is especially significant in benchmarks involving creating actors.
+Actr outperforms Akka in benchmarks involving massive creating of actors. The performance of message exchange looks comparable.
