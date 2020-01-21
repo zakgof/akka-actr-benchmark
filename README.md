@@ -82,10 +82,16 @@ The test array had 2^20 random integers.
 ```
 
 
-## frameworks compared:
+## frameworks compared
 
 - akka 2.5.21 https://github.com/akka/akka
 - actr 0.4.0 https://github.com/zakgof/actr
+
+## how to run
+
+```
+gradlew clean jmh
+```
 
 ## results
 ```
