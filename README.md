@@ -25,8 +25,13 @@ Master actor sends 100k messages to each of 100 Runner actors. Each runner repli
              <------
              . . . 
 ```
+## benchmark 3: sleeping parallel run
 
-## benchmark 3: parallel merge sort
+Similarly to the previous benchmark, the Master actor sends 100k messages to each of 100 Runner actors, but this time each Runner sleeps for 20ms before responding.
+This benchmark simulates massive concurrent operations without active CPU utilization, such as massive network operarions. We expect that JDK Project Loom's virtual threads should perform best here. 
+
+
+## benchmark 4: parallel merge sort
 
 A runner actor divides an array in two parts, then creates two new actors and sends them the halves.
 Then actor waits until both children reply with sorted arrays, merges them into a single sorted array and sends back to the parent actor.
@@ -81,6 +86,10 @@ The test array had 2^20 random integers.
                       Sorter  Sorter Sorter  Sorter Sorter  Sorter  Sorter    Sorter 
 ```
 
+
+A runner actor divides an array in two parts, then creates two new actors and sends them the halves.
+Then actor waits until both children reply with sorted arrays, merges them into a single sorted array and sends back to the parent actor.
+The test array had 2^20 random integers.
 
 ## frameworks compared
 
