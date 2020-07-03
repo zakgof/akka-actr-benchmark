@@ -5,10 +5,10 @@ import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 
-public class AkkaDive {
+public class AkkaSequential {
 
 	public static void main(String[] args) throws InterruptedException {
-		System.err.println("AKKA Dive started...");
+		System.err.println("AKKA Sequential started...");
 		long start = System.currentTimeMillis();
 		run(1000000);
 		long end = System.currentTimeMillis();

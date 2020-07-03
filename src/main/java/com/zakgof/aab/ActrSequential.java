@@ -6,10 +6,10 @@ import com.zakgof.actr.IActorScheduler;
 import com.zakgof.actr.IActorSystem;
 import com.zakgof.actr.Schedulers;
 
-public class ActrDive {
+public class ActrSequential {
 
     public static void main(String[] args) throws InterruptedException {
-        System.err.println("ACTR Dive started...");
+        System.err.println("ACTR Sequential started...");
         long start = System.currentTimeMillis();
         run(1000000, Schedulers.newForkJoinPoolScheduler(10));
         long end = System.currentTimeMillis();

@@ -10,7 +10,7 @@ import org.openjdk.jmh.annotations.State;
 import com.zakgof.actr.Schedulers;
 
 @State(Scope.Benchmark)
-public class JmhDive {
+public class JmhSequential {
 
 	public final int ACTORCOUNT = 1000000;
 
@@ -21,12 +21,12 @@ public class JmhDive {
 	@BenchmarkMode(Mode.AverageTime)
 	public void run() throws InterruptedException {
 		switch (what) {
-			case "akka": AkkaDive.run(ACTORCOUNT); break;
-			case "actr": ActrDive.run(ACTORCOUNT, Schedulers.newForkJoinPoolScheduler(10)); break;
+			case "akka": AkkaSequential.run(ACTORCOUNT); break;
+			case "actr": ActrSequential.run(ACTORCOUNT, Schedulers.newForkJoinPoolScheduler(10)); break;
 
-			case "actr-fixd": ActrDive.run(ACTORCOUNT, Schedulers.newFixedThreadPoolScheduler(Runtime.getRuntime().availableProcessors(), 10));  break;
-			case "actr-sngl": ActrDive.run(ACTORCOUNT, Schedulers.newSingleThreadScheduler()); break;
-		  //  case "actr-loom" -> ActrDive.run(ACTORCOUNT, Schedulers.newExecutorBasedScheduler(Executors.newUnboundedExecutor(Thread.builder().virtual().factory()), 10));
+			case "actr-fixd": ActrSequential.run(ACTORCOUNT, Schedulers.newFixedThreadPoolScheduler(Runtime.getRuntime().availableProcessors(), 10));  break;
+			case "actr-sngl": ActrSequential.run(ACTORCOUNT, Schedulers.newSingleThreadScheduler()); break;
+		  //  case "actr-loom" -> ActrSequential.run(ACTORCOUNT, Schedulers.newExecutorBasedScheduler(Executors.newUnboundedExecutor(Thread.builder().virtual().factory()), 10));
 		}
 	}
 }
