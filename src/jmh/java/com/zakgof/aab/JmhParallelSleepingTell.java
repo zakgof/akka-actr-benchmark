@@ -12,7 +12,7 @@ import org.openjdk.jmh.annotations.State;
 @State(Scope.Benchmark)
 public class JmhParallelSleepingTell{
 
-    public final int ACTORCOUNT = 10000;
+    public final int ACTORCOUNT = 1000;
 
     @Param({"actr-fjp", "actr-sngl", "actr-fixd", "actr-thrd", "actr-loom"})
     public String what;
